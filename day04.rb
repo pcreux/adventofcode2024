@@ -12,8 +12,8 @@ MAMMMXMMMM
 MXMXAXMASX
 STR
 
-#GRID = TEST_INPUT.split("\n").map { _1.split('') }
-GRID = File.read('day04_input.txt').split("\n").map { _1.split('') }
+GRID = TEST_INPUT.split("\n").map { _1.split('') }
+#GRID = File.read('day04_input.txt').split("\n").map { _1.split('') }
 
 max_x = GRID.size
 max_y = GRID.first.size
@@ -32,16 +32,28 @@ end
 def check(x, y)
   n = 0
 
-  n += 1 if [cell(x, y), cell(x+1, y), cell(x+2, y), cell(x+3, y)] == %w[X M A S] # left to right
-  n += 1 if [cell(x, y), cell(x-1, y), cell(x-2, y), cell(x-3, y)] == %w[X M A S] # right to left
-  n += 1 if [cell(x, y), cell(x, y-1), cell(x, y-2), cell(x, y-3)] == %w[X M A S] # up
-  n += 1 if [cell(x, y), cell(x, y+1), cell(x, y+2), cell(x, y+3)] == %w[X M A S] # down
-  n += 1 if [cell(x, y), cell(x+1, y+1), cell(x+2, y+2), cell(x+3, y+3)] == %w[X M A S] # diagonal left to right down
-  n += 1 if [cell(x, y), cell(x+1, y-1), cell(x+2, y-2), cell(x+3, y-3)] == %w[X M A S] # diagonal left to right up
-  n += 1 if [cell(x, y), cell(x-1, y+1), cell(x-2, y+2), cell(x-3, y+3)] == %w[X M A S] # diagonal right to left down
-  n += 1 if [cell(x, y), cell(x-1, y-1), cell(x-2, y-2), cell(x-3, y-3)] == %w[X M A S] # diagonal right to left up
+  [ -1, 0, 1 ].each do |dx|
+    [ -1, 0, 1 ].each do |dy|
+      next if dx == 0 && dy == 0
+
+      n += 1 if check_line(x, y, dx, dy)
+    end
+  end
 
   n
+end
+
+def check_line(x, y, direction_x=0, direction_y=0)
+  get_line(x, y, direction_x, direction_y) == %w[X M A S]
+end
+
+def get_line(x, y, direction_x=0, direction_y=0)
+  [
+    cell(x, y),
+    cell((x + direction_x), (y + direction_y)),
+    cell((x + 2 * direction_x), (y + 2 * direction_y)),
+    cell((x + 3 * direction_x), (y + 3 * direction_y))
+  ]
 end
 
 total = 0
