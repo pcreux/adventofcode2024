@@ -30,7 +30,7 @@ TEST_INPUT = <<~TEST
 97,13,75,29,47
 TEST
 
-INPUT = TEST_INPUT
+#INPUT = TEST_INPUT
 INPUT = File.read("day05_input.txt")
 
 RULES = INPUT.split("\n").filter_map do |line|
@@ -53,4 +53,26 @@ valid_updates = UPDATES.select do |update|
   end
 end
 
+puts "Valid updates middle values sum:"
 pp valid_updates.sum { _1[_1.size / 2] }
+
+invalid_updates = UPDATES - valid_updates
+
+fixed_updates = invalid_updates.map do |update|
+  update.sort do |left, right|
+    rule = RULES.find do |r_left, r_right|
+      [left, right].sort == [r_left, r_right].sort
+    end
+
+    break 0 if rule.nil? # no sorting
+
+    if left == rule.first
+      -1
+    else
+      1
+    end
+  end
+end
+
+puts "Fixed updates middle values sum:"
+pp fixed_updates.sum { _1[_1.size / 2] }
