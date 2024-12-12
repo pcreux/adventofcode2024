@@ -13,6 +13,14 @@ INPUT
 INPUT = File.read('day07_input.txt')
 
 Equation = Struct.new(:result, :numbers) do
+  def has_solution?
+    operator_options
+      .lazy
+      .map { |operators| numbers.zip(operators).flatten.compact }
+      .any? { |operation| evaluate(operation) == result }
+  end
+
+  # Slow since it generates all possible evaluations
   def solutions
     @solutions ||= evaluations.select do |_, evaluation_result|
       evaluation_result == result
@@ -55,7 +63,8 @@ start_time = Time.now
 results = Parallel.map(INPUT.split("\n"), in_processes: 8) do |line|
   result, *numbers = line.split(/[: ] ?/).map(&:to_i)
   equation = Equation.new(result, numbers)
-  equation.solutions.any? ? equation.result : 0
+  # equation.solutions.any? ? equation.result : 0 # ~90 seconds
+  equation.has_solution? ? equation.result : 0 # ~10 seconds
 end
 
 sum = results.sum
