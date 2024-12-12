@@ -12,6 +12,8 @@ INPUT = <<~INPUT
 ......#...
 INPUT
 
+INPUT = File.read('day06_input.txt')
+
 def parse(input)
   input.split("\n").map { |line| line.split('') }
 end
@@ -25,8 +27,6 @@ MAX_Y = MAP.size
 Turn = Struct.new(:map) do
   # Returns the next map
   def play
-    puts "Guard #{direction} is at #{position}"
-
     @next_map ||= case peak
     when '#'
       turn_90_degrees_right
@@ -86,29 +86,18 @@ Turn = Struct.new(:map) do
   end
 
   def step_forward
-    map.each_with_index.map do |row, y|
-      row.each_with_index.map do |cell, x|
-        if [x, y] == position
-          '.' # Clear the current cell
-        elsif [x, y] == next_position
-          direction
-        else
-          cell
-        end
-      end
-    end
+    next_map = map.dup
+    next_map[next_position[1]][next_position[0]] = direction
+    next_map[position[1]][position[0]] = '.'
+
+    next_map
   end
 
   def turn_90_degrees_right
-    map.each_with_index.map do |row, y|
-      row.each_with_index.map do |cell, x|
-        if [x, y] == position
-          GARDS[(GARDS.index(direction) + 1) % GARDS.size]
-        else
-          cell
-        end
-      end
-    end
+    next_map = map.dup
+    next_map[position[1]][position[0]] = GARDS[(GARDS.index(direction) + 1) % GARDS.size]
+
+    next_map
   end
 
   def peak
@@ -124,15 +113,19 @@ end
 print MAP
 
 turns = []
+iterations = 0
 loop do
+  iterations += 1
+  puts iterations if iterations % 100 == 0
   map = turns.last&.play || MAP
   turn = Turn.new(map)
   turns << turn
 
-  # clear screen
-  puts "\e[H\e[2J"
-  print turn.play
-  sleep 0.1
+  new_map =  turn.play
+  # # clear screen
+  # puts "\e[H\e[2J"
+  # print new_map
+  # sleep 0.1
 
   if turn.done?
     puts "Done!"
