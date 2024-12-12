@@ -43,18 +43,25 @@ Equation = Struct.new(:result, :numbers) do
   end
 end
 
-equations = INPUT.split("\n").map { |line|
-  line.split(/[: ] ?/).map(&:to_i)
-}.map { |result, *numbers|
-  Equation.new(result, numbers)
-}
+require 'bundler/inline'
 
-#equations.each do |equation|
-#  pp equation.evaluations
-#end
-#
-#equations.each do |equation|
-#  puts "#{equation.result}: #{equation.solutions.any?} - Solutions: #{equation.solutions.map { |solution, _| solution.join(' ') }.join(', ')}"
-#end
+gemfile do
+  source 'https://rubygems.org'
+  gem 'parallel'
+end
 
-pp equations.select { _1.solutions.any? }.sum(&:result)
+start_time = Time.now
+
+results = Parallel.map(INPUT.split("\n"), in_processes: 8) do |line|
+  result, *numbers = line.split(/[: ] ?/).map(&:to_i)
+  equation = Equation.new(result, numbers)
+  equation.solutions.any? ? equation.result : 0
+end
+
+sum = results.sum
+
+end_time = Time.now
+
+puts "Sum: #{sum}"
+puts "Execution Time: #{end_time - start_time}"
+
