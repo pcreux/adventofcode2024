@@ -58,6 +58,22 @@ fn run_fast(input: &str, blinks: usize) -> Vec<u64> {
     stones
 }
 
+
+/**
+ * Blink 30: 964027 stones. (269ms / 1M stones). Elapsed: 0.01m. ETA: 0.19m.
+Blink 31: 1466235 stones. (273ms / 1M stones). Elapsed: 0.02m. ETA: 0.29m.
+Blink 32: 2229727 stones. (259ms / 1M stones). Elapsed: 0.03m. ETA: 0.41m.
+Blink 33: 3366152 stones. (263ms / 1M stones). Elapsed: 0.04m. ETA: 0.62m.
+Blink 34: 5154934 stones. (268ms / 1M stones). Elapsed: 0.07m. ETA: 0.94m.
+Blink 35: 7793740 stones. (265ms / 1M stones). Elapsed: 0.10m. ETA: 1.38m.
+Blink 36: 11819352 stones. (264ms / 1M stones). Elapsed: 0.15m. ETA: 2.03m.
+Blink 37: 18052606 stones. (305ms / 1M stones). Elapsed: 0.24m. ETA: 3.48m.
+Blink 38: 27278105 stones. (319ms / 1M stones). Elapsed: 0.39m. ETA: 5.37m.
+Blink 39: 41535881 stones. (337ms / 1M stones). Elapsed: 0.62m. ETA: 8.40m.
+Blink 40: 63083615 stones. (358ms / 1M stones). Elapsed: 1.00m. ETA: 13.17m.
+Blink 41: 95665503 stones. (390ms / 1M stones). Elapsed: 1.62m. ETA: 21.17m.
+Blink 42: 145765473 stones. (349ms / 1M stones). Elapsed: 2.47m. ETA: 27.96m.
+*/
 fn main() {
     let input1 = "0 1 10 99 999";
     println!("INPUT = {}", input1);
@@ -81,19 +97,3 @@ fn main() {
     let result = run_fast(input4, 75);
     println!("Size: {}", result.len());
 }
-
-/**
- * Blink 30: 964027 stones. (269ms / 1M stones). Elapsed: 0.01m. ETA: 0.19m.
-Blink 31: 1466235 stones. (273ms / 1M stones). Elapsed: 0.02m. ETA: 0.29m.
-Blink 32: 2229727 stones. (259ms / 1M stones). Elapsed: 0.03m. ETA: 0.41m.
-Blink 33: 3366152 stones. (263ms / 1M stones). Elapsed: 0.04m. ETA: 0.62m.
-Blink 34: 5154934 stones. (268ms / 1M stones). Elapsed: 0.07m. ETA: 0.94m.
-Blink 35: 7793740 stones. (265ms / 1M stones). Elapsed: 0.10m. ETA: 1.38m.
-Blink 36: 11819352 stones. (264ms / 1M stones). Elapsed: 0.15m. ETA: 2.03m.
-Blink 37: 18052606 stones. (305ms / 1M stones). Elapsed: 0.24m. ETA: 3.48m.
-Blink 38: 27278105 stones. (319ms / 1M stones). Elapsed: 0.39m. ETA: 5.37m.
-Blink 39: 41535881 stones. (337ms / 1M stones). Elapsed: 0.62m. ETA: 8.40m.
-Blink 40: 63083615 stones. (358ms / 1M stones). Elapsed: 1.00m. ETA: 13.17m.
-Blink 41: 95665503 stones. (390ms / 1M stones). Elapsed: 1.62m. ETA: 21.17m.
-Blink 42: 145765473 stones. (349ms / 1M stones). Elapsed: 2.47m. ETA: 27.96m.
-*/
