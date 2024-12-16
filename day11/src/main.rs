@@ -2,27 +2,25 @@ use rayon::prelude::*; // For parallel processing
 use std::time::Instant;
 
 fn blink(stones: Vec<u64>) -> Vec<u64> {
-    let slices = stones
-        .chunks(std::cmp::max(stones.len() / 8, 10))
-        .map(|slice| slice.to_vec())
-        .collect::<Vec<_>>();
+    let chunk_size = std::cmp::max(stones.len() / 8, 10);
 
-    slices
-        .into_par_iter() // Parallel iteration
+    stones
+        .par_chunks(chunk_size) // Parallel processing of chunks
         .flat_map(|slice| {
-            slice.into_par_iter().flat_map(|stone| {
-                let stone_str = stone.to_string();
+            slice.par_iter().flat_map(|&stone| {
                 if stone == 0 {
                     vec![1]
-                } else if stone_str.len() % 2 == 0 {
-                    let size = stone_str.len();
-                    let half = size / 2;
-                    vec![
-                        stone_str[0..half].parse::<u64>().unwrap(),
-                        stone_str[half..size].parse::<u64>().unwrap(),
-                    ]
                 } else {
-                    vec![stone * 2024]
+                    let stone_str = stone.to_string();
+                    if stone_str.len() % 2 == 0 {
+                        let half = stone_str.len() / 2;
+                        vec![
+                            stone_str[..half].parse::<u64>().unwrap(),
+                            stone_str[half..].parse::<u64>().unwrap(),
+                        ]
+                    } else {
+                        vec![stone * 2024]
+                    }
                 }
             })
         })
@@ -45,7 +43,7 @@ fn run_fast(input: &str, blinks: usize) -> Vec<u64> {
         let duration = blink_start_time.elapsed().as_secs_f64();
 
         let elapsed = start_time.elapsed().as_secs_f64();
-        let eta = duration * (blinks - n) as f64;
+        let eta = duration * (blinks - n - 1) as f64;
 
         println!(
             "Blink {}: {} stones. ({}ms / 1M stones). Elapsed: {:.2}m. ETA: {:.2}m.",
@@ -84,13 +82,18 @@ fn main() {
     println!("Size: {}", result.len());
 }
 
-/*
-   ...
-Blink 36: 11819352 stones. (310ms / 1M stones). Elapsed: 0.17m. ETA: 2.44m.
-Blink 37: 18052606 stones. (315ms / 1M stones). Elapsed: 0.26m. ETA: 3.69m.
-Blink 38: 27278105 stones. (322ms / 1M stones). Elapsed: 0.41m. ETA: 5.56m.
-Blink 39: 41535881 stones. (357ms / 1M stones). Elapsed: 0.66m. ETA: 9.14m.
-Blink 40: 63083615 stones. (333ms / 1M stones). Elapsed: 1.01m. ETA: 12.61m.
-Blink 41: 95665503 stones. (341ms / 1M stones). Elapsed: 1.55m. ETA: 19.04m.
-Blink 42: 145765473 stones. (659ms / 1M stones). Elapsed: 3.15m. ETA: 54.43m.
+/**
+ * Blink 30: 964027 stones. (269ms / 1M stones). Elapsed: 0.01m. ETA: 0.19m.
+Blink 31: 1466235 stones. (273ms / 1M stones). Elapsed: 0.02m. ETA: 0.29m.
+Blink 32: 2229727 stones. (259ms / 1M stones). Elapsed: 0.03m. ETA: 0.41m.
+Blink 33: 3366152 stones. (263ms / 1M stones). Elapsed: 0.04m. ETA: 0.62m.
+Blink 34: 5154934 stones. (268ms / 1M stones). Elapsed: 0.07m. ETA: 0.94m.
+Blink 35: 7793740 stones. (265ms / 1M stones). Elapsed: 0.10m. ETA: 1.38m.
+Blink 36: 11819352 stones. (264ms / 1M stones). Elapsed: 0.15m. ETA: 2.03m.
+Blink 37: 18052606 stones. (305ms / 1M stones). Elapsed: 0.24m. ETA: 3.48m.
+Blink 38: 27278105 stones. (319ms / 1M stones). Elapsed: 0.39m. ETA: 5.37m.
+Blink 39: 41535881 stones. (337ms / 1M stones). Elapsed: 0.62m. ETA: 8.40m.
+Blink 40: 63083615 stones. (358ms / 1M stones). Elapsed: 1.00m. ETA: 13.17m.
+Blink 41: 95665503 stones. (390ms / 1M stones). Elapsed: 1.62m. ETA: 21.17m.
+Blink 42: 145765473 stones. (349ms / 1M stones). Elapsed: 2.47m. ETA: 27.96m.
 */
