@@ -10,7 +10,7 @@ fn blink(stones: Vec<u64>) -> Vec<u64> {
     slices
         .into_par_iter() // Parallel iteration
         .flat_map(|slice| {
-            slice.into_iter().flat_map(|stone| {
+            slice.into_par_iter().flat_map(|stone| {
                 let stone_str = stone.to_string();
                 if stone == 0 {
                     vec![1]
@@ -84,3 +84,13 @@ fn main() {
     println!("Size: {}", result.len());
 }
 
+/*
+   ...
+Blink 36: 11819352 stones. (310ms / 1M stones). Elapsed: 0.17m. ETA: 2.44m.
+Blink 37: 18052606 stones. (315ms / 1M stones). Elapsed: 0.26m. ETA: 3.69m.
+Blink 38: 27278105 stones. (322ms / 1M stones). Elapsed: 0.41m. ETA: 5.56m.
+Blink 39: 41535881 stones. (357ms / 1M stones). Elapsed: 0.66m. ETA: 9.14m.
+Blink 40: 63083615 stones. (333ms / 1M stones). Elapsed: 1.01m. ETA: 12.61m.
+Blink 41: 95665503 stones. (341ms / 1M stones). Elapsed: 1.55m. ETA: 19.04m.
+Blink 42: 145765473 stones. (659ms / 1M stones). Elapsed: 3.15m. ETA: 54.43m.
+*/
