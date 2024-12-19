@@ -66,9 +66,6 @@ Map = Struct.new(:input) do
     end
 
     def display
-      colors = [ 31, 32, 33, 34, 35, 36, 37, 38 ]
-      #code = (group.scan(/\d/).map(&:to_i).sum) % colors.size
-
       code = if group
               value.ord * 2 % 256 + group.scan(/\d/).map(&:to_i).sum
              else
@@ -99,17 +96,8 @@ Map = Struct.new(:input) do
     end
 
     def mark_neighbors(group: "#{value}(#{x},#{y})")
-      debug = false && x > 130 && y > 130 && value == 'G'
-
-      if self.group
-        puts "#{self}: Already in group #{self.group}" if debug
-        return
-      end
-
-      puts "#{self}: Set group #{group}" if debug
       self.group = group
 
-      puts "#{self}: Marking neighbors for #{friends.size} friends: #{friends.map { _1.to_s }.join(', ')}" if debug
       friends.each { _1.mark_neighbors(group: self.group) }
     end
 
